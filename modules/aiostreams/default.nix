@@ -6,6 +6,9 @@
   name = "aiostreams";
   cfg = config.nps.stacks.${name};
   storage = "${config.nps.storageBaseDir}/${name}";
+
+  category = "Media & Downloads";
+  description = "Stream Source Aggregator";
 in {
   imports = import ../mkAliases.nix config lib name [name];
 
@@ -50,13 +53,18 @@ in {
 
       port = 3000;
       traefik.name = name;
+
       homepage = {
-        category = "Media & Downloads";
-        name = "AIOStreams";
+        inherit category;
         settings = {
-          description = "Stream Source Aggregator";
+          inherit description;
           icon = "stremio";
         };
+      };
+      glance = {
+        inherit category description;
+        id = name;
+        icon = "di:stremio";
       };
     };
   };
