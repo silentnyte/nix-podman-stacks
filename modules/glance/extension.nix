@@ -69,7 +69,10 @@ in {
             url = lib.mkOption {
               type = lib.types.str;
               description = "The URL of the service.";
-              default = config.traefik.serviceUrl;
+              default =
+                if (config.traefik.name != null)
+                then config.traefik.serviceUrl
+                else "";
             };
           };
         };
