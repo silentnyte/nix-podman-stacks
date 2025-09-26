@@ -6,16 +6,6 @@
     scrape_timeout = "10s";
     evaluation_interval = "15s";
   };
-  alerting = {
-    alertmanagers = [
-      {
-        static_configs = [{targets = [];}];
-        scheme = "http";
-        timeout = "10s";
-        api_version = "v2";
-      }
-    ];
-  };
   scrape_configs = [
     {
       job_name = "prometheus";

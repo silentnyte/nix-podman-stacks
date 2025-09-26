@@ -145,7 +145,7 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    nps.stacks.monitoring.prometheus.config = lib.mkIf cfg.enablePrometheusExport {
+    nps.stacks.monitoring.prometheus.settings = lib.mkIf cfg.enablePrometheusExport {
       scrape_configs = [
         {
           job_name = "crowdsec";

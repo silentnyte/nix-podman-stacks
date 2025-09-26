@@ -47,7 +47,7 @@ in {
       dashboards = [./grafana_dashboard.json];
       settings.panels.disable_sanitize_html = true;
     };
-    nps.stacks.monitoring.prometheus.config = lib.mkIf cfg.enablePrometheusExport {
+    nps.stacks.monitoring.prometheus.settings = lib.mkIf cfg.enablePrometheusExport {
       scrape_configs = [
         {
           job_name = "blocky";

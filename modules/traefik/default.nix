@@ -263,7 +263,7 @@ in {
       grafana.dashboards =
         (lib.optional cfg.enableGrafanaAccessLogDashboard ./grafana/access_log_dashboard.json)
         ++ (lib.optional cfg.enableGrafanaMetricsDashboard ./grafana/metrics_dashboard.json);
-      prometheus.config.scrape_configs = lib.optional cfg.enablePrometheusExport {
+      prometheus.settings.scrape_configs = lib.optional cfg.enablePrometheusExport {
         job_name = "traefik";
         honor_timestamps = true;
         metrics_path = "/metrics";

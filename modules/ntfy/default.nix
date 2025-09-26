@@ -58,7 +58,7 @@ in {
   config = lib.mkIf cfg.enable {
     nps.stacks.monitoring = {
       grafana.dashboards = lib.optional cfg.enableGrafanaDashboard ./grafana_dashboard.json;
-      prometheus.config.scrape_configs = lib.optional cfg.enablePrometheusExport {
+      prometheus.settings.scrape_configs = lib.optional cfg.enablePrometheusExport {
         job_name = "ntfy";
         honor_timestamps = true;
         metrics_path = "/metrics";
@@ -92,9 +92,9 @@ in {
 
       extraEnv = cfg.extraEnv;
 
+      stack = name;
       port = 80;
       traefik.name = name;
-
       homepage = {
         inherit category;
         name = displayName;

@@ -19,6 +19,10 @@
   prometheusDisplayName = "Prometheus";
   podmanExporterDescription = "Podman Metric Exporter";
   podmanExporterDisplayName = "Podman Prometheus Exporter";
+  alertmanagerDescription = "Prometheus Alert Handling";
+  alertmanagerDisplayName = "Alertmanager";
+  alertmanagerNtfyDescription = "Forward Alerts to ntfy";
+  alertmanagerNtfyDisplayName = "alertmanager-ntfy";
 
   yaml = pkgs.formats.yaml {};
   ini = pkgs.formats.ini {};
@@ -28,6 +32,8 @@
   prometheusName = "prometheus";
   alloyName = "alloy";
   podmanExporterName = "podman-exporter";
+  alertmanagerName = "alertmanager";
+  alertmanagerNtfyName = "alertmanager-ntfy";
 
   dashboardPath = "/var/lib/grafana/dashboards";
 
@@ -216,7 +222,7 @@ in {
         default = 9090;
         visible = false;
       };
-      config = lib.mkOption {
+      settings = lib.mkOption {
         type = yaml.type;
         default = {};
         apply = yaml.generate "prometheus_config.yml";
@@ -227,12 +233,72 @@ in {
           See <https://prometheus.io/docs/prometheus/latest/configuration/configuration/>
         '';
       };
-    };
-    podmanExporter.enable =
-      lib.mkEnableOption "Podman Metrics Exporter"
-      // {
-        default = true;
+      rules = lib.mkOption {
+        type = yaml.type;
+        default = {};
+        description = ''
+          Alerting rule configuration for Prometheus.
+          If provided, the rules will added to the `rule_file` setting.
+
+          See <https://prometheus.io/docs/prometheus/latest/configuration/alerting_rules/>
+        '';
       };
+    };
+    podmanExporter.enable = lib.mkEnableOption "Podman Metrics Exporter" // {default = true;};
+    alertmanager = {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = ''
+          Whether to enable the Alertmanager.
+
+          When setting `alertmanager.ntfy.enable`, a route and receiver configuration will be setup for ntfy.
+          If using without ntfy, you will have to provide your own route and receiver configurations via the `settings` option
+          for Alertmanager to startup correctly.
+        '';
+      };
+      settings = lib.mkOption {
+        type = yaml.type;
+        apply = yaml.generate "alertmanager.yml";
+        default = {};
+        description = ''
+          Alertmanager configuration. Will be provided as the `alertmanager.yml`.
+
+          See <https://prometheus.io/docs/alerting/latest/configuration/>
+        '';
+      };
+      ntfy = {
+        enable = lib.mkOption {
+          type = lib.types.bool;
+          default = config.nps.stacks.ntfy.enable;
+          defaultText = lib.literalExpression ''config.nps.stacks.ntfy.enable'';
+          description = ''
+            Whether to setup and configure alertmanager-ntfy.
+            This allows alerts to be forwarded to ntfy.
+
+            See <https://github.com/alexbakker/alertmanager-ntfy>
+          '';
+        };
+        tokenFile = lib.mkOption {
+          type = lib.types.nullOr lib.types.path;
+          default = null;
+          description = ''
+            Path to the file containing the token that is used for authentication against the ntfy service.
+            Only required if ntfy is configured to require authentication.
+          '';
+        };
+        settings = lib.mkOption {
+          type = yaml.type;
+          apply = yaml.generate "config.yml";
+          default = {};
+          description = ''
+            alertmanager-ntfy configuration. Will be provided as the `config.yml`.
+
+            See <https://github.com/alexbakker/alertmanager-ntfy/pkgs/container/alertmanager-ntfy#configuration>
+          '';
+        };
+      };
+    };
   };
 
   config = lib.mkIf cfg.enable {
@@ -274,8 +340,23 @@ in {
       loki.config = import ./loki_local_config.nix cfg.loki.port;
       alloy.config = import ./alloy_config.nix lokiUrl dockerHost;
 
-      prometheus.config = lib.mkMerge [
+      prometheus.settings = lib.mkMerge [
         (import ./prometheus_config.nix)
+        (lib.mkIf cfg.alertmanager.enable {
+          alerting = {
+            alertmanagers = [
+              {
+                static_configs = [{targets = [(alertmanagerName + ":9093")];}];
+                scheme = "http";
+                timeout = "10s";
+                api_version = "v2";
+              }
+            ];
+          };
+        })
+        (lib.mkIf (cfg.prometheus.rules != {}) {
+          rule_files = ["/etc/prometheus/rules.yml"];
+        })
         (lib.mkIf cfg.podmanExporter.enable {
           scrape_configs = [
             {
@@ -288,6 +369,41 @@ in {
           ];
         })
       ];
+
+      alertmanager = lib.mkIf cfg.alertmanager.enable {
+        settings = lib.mkIf cfg.alertmanager.ntfy.enable {
+          route = {
+            receiver = "ntfy";
+            repeat_interval = lib.mkDefault "4h";
+            group_by = ["alertname"];
+          };
+          receivers = [
+            {
+              name = "ntfy";
+              webhook_configs = [
+                {
+                  url = "http://${alertmanagerNtfyName}:8000/hook";
+                }
+              ];
+            }
+          ];
+        };
+        ntfy.settings = lib.mkIf cfg.alertmanager.ntfy.enable {
+          http.addr = ":8000";
+          ntfy = {
+            baseurl = "http://${config.nps.containers.ntfy.traefik.serviceAddressInternal}";
+
+            notification = {
+              topic = lib.mkDefault "alertmanager";
+              priority = lib.mkDefault "default";
+              templates = {
+                title = lib.mkDefault ''{{ if eq .Status "resolved" }}Resolved: {{ end }}{{ index .Annotations "summary" }}'';
+                description = lib.mkDefault ''{{ index .Annotations "description" }}'';
+              };
+            };
+          };
+        };
+      };
     };
 
     services.podman.containers = {
@@ -418,10 +534,12 @@ in {
           image = "docker.io/prom/prometheus:v3.6.0";
           exec = "--config.file=${configDst}";
           user = config.nps.defaultUid;
-          volumes = [
-            "${storage}/prometheus/data:/prometheus"
-            "${cfg.prometheus.config}:${configDst}"
-          ];
+          volumes =
+            [
+              "${storage}/prometheus/data:/prometheus"
+              "${cfg.prometheus.settings}:${configDst}"
+            ]
+            ++ lib.optional (cfg.prometheus.rules != {}) "${yaml.generate "rules.yml" cfg.prometheus.rules}:/etc/prometheus/rules.yml";
 
           port = cfg.prometheus.port;
           stack = stackName;
@@ -468,6 +586,66 @@ in {
           name = podmanExporterDisplayName;
           id = podmanExporterName;
           icon = "di:podman";
+        };
+      };
+
+      ${alertmanagerName} = lib.mkIf cfg.alertmanager.enable {
+        image = "docker.io/prom/alertmanager:v0.28.1";
+        user = config.nps.defaultUid;
+        volumes = [
+          "${cfg.alertmanager.settings}:/config/alertmanager.yml"
+          "${storage}/${alertmanagerName}:/data"
+        ];
+        exec = "--config.file=/config/alertmanager.yml --storage.path=/data";
+
+        stack = stackName;
+        port = 9093;
+        traefik.name = alertmanagerName;
+
+        homepage = {
+          inherit category;
+          name = alertmanagerDisplayName;
+          settings = {
+            description = alertmanagerDescription;
+            icon = "alertmanager";
+          };
+        };
+        glance = {
+          inherit category;
+          description = alertmanagerDescription;
+          name = alertmanagerDisplayName;
+          id = alertmanagerName;
+          icon = "di:alertmanager";
+        };
+      };
+
+      ${alertmanagerNtfyName} = lib.mkIf (cfg.alertmanager.enable && cfg.alertmanager.ntfy.enable) {
+        image = "ghcr.io/alexbakker/alertmanager-ntfy:1.0.1";
+        volumes = ["${cfg.alertmanager.ntfy.settings}:/etc/config.yml"];
+        templateMount = lib.optional (cfg.alertmanager.ntfy.tokenFile != null) {
+          templatePath = yaml.generate "auth.yaml" {ntfy.auth.token = "{{file.Read `${cfg.alertmanager.ntfy.tokenFile}`}}";};
+          destPath = "/etc/auth.yml";
+        };
+        exec = "--configs /etc/config.yml,/etc/auth.yml";
+
+        # Join both ntfy and monitoring network
+        stack = stackName;
+        network = ["ntfy"];
+
+        homepage = {
+          inherit category;
+          name = alertmanagerNtfyDisplayName;
+          settings = {
+            description = alertmanagerNtfyDescription;
+            icon = "ntfy";
+          };
+        };
+        glance = {
+          inherit category;
+          description = alertmanagerNtfyDescription;
+          name = alertmanagerNtfyDisplayName;
+          id = alertmanagerNtfyName;
+          icon = "di:ntfy";
         };
       };
     };

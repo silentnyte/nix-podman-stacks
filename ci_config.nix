@@ -402,7 +402,38 @@ in {
         };
       };
 
-      monitoring.enable = true;
+      monitoring = {
+        enable = true;
+        prometheus.rules.groups = let
+          cpuThresh = 90;
+        in [
+          {
+            name = "resource.usage";
+            rules = [
+              {
+                alert = "HighCpuUsage";
+                expr = ''100 - (avg by(instance)(rate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > ${toString cpuThresh}'';
+                for = "20m";
+                labels = {
+                  severity = "warning";
+                };
+                annotations = {
+                  summary = "High CPU usage";
+                  description = "CPU usage is above ${toString cpuThresh}% (current value: {{ $value }}%)";
+                };
+              }
+            ];
+          }
+        ];
+
+        alertmanager = {
+          enable = true;
+          ntfy = {
+            enable = true;
+            settings.ntfy.notification.topic = "monitoring";
+          };
+        };
+      };
 
       n8n.enable = true;
 
