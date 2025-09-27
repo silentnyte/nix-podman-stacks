@@ -39,14 +39,15 @@ in {
 
         See <https://github.com/danielbrendel/hortusfox-web?tab=readme-ov-file#installation>
       '';
-      example = {
-        PROXY_ENABLE = true;
-        PROXY_HEADER_EMAIL = "Remote-Email";
-        PROXY_HEADER_USERNAME = "Remote-User";
-        PROXY_AUTO_SIGNUP = true;
-        PROXY_WHITELIST = config.nps.stacks.traefik.ip4;
-        PROXY_HIDE_LOGOUT = true;
-      };
+      example = lib.literalExpression ''
+        {
+          PROXY_ENABLE = true;
+          PROXY_HEADER_EMAIL = "Remote-Email";
+          PROXY_HEADER_USERNAME = "Remote-User";
+          PROXY_AUTO_SIGNUP = true;
+          PROXY_WHITELIST = config.nps.stacks.traefik.ip4;
+          PROXY_HIDE_LOGOUT = true;
+        }'';
     };
     db = {
       userPasswordFile = lib.mkOption {
