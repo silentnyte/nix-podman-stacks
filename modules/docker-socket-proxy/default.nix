@@ -45,6 +45,9 @@ in {
         INFO = 1;
         IMAGES = 1;
         NETWORKS = 1;
+        VERSION = 1;
+        PING = 1;
+        EVENTS = 1;
         CONFIGS = 1;
         POST = 0;
       };

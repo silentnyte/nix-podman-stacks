@@ -27,6 +27,7 @@ let
     healthchecks = ./healthchecks;
     homeassistant = ./homeassistant;
     homepage = ./homepage;
+    hortusfox = ./hortusfox;
     immich = ./immich;
     ittools = ./it-tools;
     karakeep = ./karakeep;

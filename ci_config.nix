@@ -114,8 +114,8 @@ in {
         enableLdapAuth = true;
         db = {
           type = "mysql";
-          userPasswordFile = dummySecret;
-          rootPasswordFile = dummySecret;
+          userPasswordFile = dummySecretFile;
+          rootPasswordFile = dummySecretFile;
         };
       };
 
@@ -309,6 +309,24 @@ in {
             };
           }
         ];
+      };
+
+      hortusfox = {
+        enable = true;
+        db = {
+          userPasswordFile = dummySecretFile;
+          rootPasswordFile = dummySecretFile;
+        };
+        containers.hortusfox.forwardAuth.enable = true;
+        adminEmail = dummyEmail;
+        extraEnv = {
+          PROXY_ENABLE = true;
+          PROXY_HEADER_EMAIL = "Remote-Email";
+          PROXY_HEADER_USERNAME = "Remote-User";
+          PROXY_AUTO_SIGNUP = true;
+          PROXY_WHITELIST = config.nps.stacks.traefik.ip4;
+          PROXY_HIDE_LOGOUT = true;
+        };
       };
 
       immich = {

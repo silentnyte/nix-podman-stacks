@@ -8,6 +8,7 @@
   storage = "${config.nps.storageBaseDir}/${name}";
 
   category = "Media & Downloads";
+  displayName = "AIOStreams";
   description = "Stream Source Aggregator";
 in {
   imports = import ../mkAliases.nix config lib name [name];
@@ -56,6 +57,7 @@ in {
 
       homepage = {
         inherit category;
+        name = displayName;
         settings = {
           inherit description;
           icon = "stremio";
@@ -63,6 +65,7 @@ in {
       };
       glance = {
         inherit category description;
+        name = displayName;
         id = name;
         icon = "di:stremio";
       };

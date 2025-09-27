@@ -38,16 +38,8 @@ For managing secrets, projects such as [sops-nix](https://github.com/Mic92/sops-
 ## 📔 Option Documentation
 
 Refer to the [documentation](https://tarow.github.io/nix-podman-stacks/book) for a full list of available options.
+
 There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/search) to easily explore existing options.
-
-Most stacks will rely or use a few centrally defined variables. These include:
-
-| `nps` Option             | Description                                                                               |
-| ------------------------ | ----------------------------------------------------------------------------------------- |
-| `hostIP4Address`         | The IPv4 address of the host. Will be used for example in case of explicit port bindings. |
-| `hostUid`                | The UID of the host user running the podman stacks.                                       |
-| `storageBaseDir`         | Base storage location used for bind mounts. Used as a base location for bind mounts.      |
-| `externalStorageBaseDir` | Base storage location used for media files, e.g. pictures used by Immich.                 |
 
 ## 📦 Available Stacks
 
@@ -82,6 +74,7 @@ Most stacks will rely or use a few centrally defined variables. These include:
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/healthchecks.svg" style="width:1em;height:1em;" /> [Healthchecks](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/healchecks/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/home-assistant.svg" style="width:1em;height:1em;" /> [Home Assistant](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/homeassistant/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png" style="width:1em;height:1em;" /> [Homepage](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/homepage/default.nix)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/webp/hortusfox.webp" style="width:1em;height:1em;" /> [HortusFox](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/hortusfox/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/immich.svg" style="width:1em;height:1em;" /> [Immich](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/immich/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/it-tools.svg" style="width:1em;height:1em;" /> [IT-Tools](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/it-tools/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/karakeep.svg" style="width:1em;height:1em;" /> [Karakeep](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/karakeep/default.nix)
