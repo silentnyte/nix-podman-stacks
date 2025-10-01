@@ -223,7 +223,7 @@ in {
             }
           )
         );
-        default = [];
+        default = {};
         description = ''
           LLDAP users that will be provisioned at startup.
           You can also specify custom attributes for the user, if they are defined in the `useSchemas` option.
