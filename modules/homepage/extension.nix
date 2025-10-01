@@ -70,7 +70,7 @@ in {
           container = lib.mkDefault name;
           widget = {
             enable = lib.mkDefault false;
-            url = lib.mkDefault "http://${name}:${toString config.port}";
+            url = lib.mkDefault "http://${config.traefik.serviceAddressInternal}";
           };
         };
       };

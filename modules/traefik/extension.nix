@@ -77,7 +77,15 @@ in {
               };
               serviceAddressInternal = mkOption {
                 type = lib.types.str;
-                default = "${name}:${getPort port 1}";
+                default = let
+                  p = getPort port 1;
+                in
+                  "${name}"
+                  + (
+                    if (p != null)
+                    then ":${p}"
+                    else ""
+                  );
                 defaultText = lib.literalExpression ''"''${containerName}''${containerCfg.port}"'';
                 description = ''
                   The internal main address of the service. Can be used for internal communication
