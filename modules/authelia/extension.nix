@@ -65,7 +65,7 @@ in {
                 domain = mkOption {
                   type = listOf str;
                   default = [config.traefik.serviceHost];
-                  defaultText = lib.literalExpression ''[ containerCfg.traefik.serviceUrl ]'';
+                  defaultText = lib.literalExpression ''[ containerCfg.traefik.serviceHost ]'';
                   description = ''
                     Domain(s) that will be matched for the rule. Defaults to the servie domain registered in Traefik.
                     Either this, or the `domain_regex` options has to be set.
