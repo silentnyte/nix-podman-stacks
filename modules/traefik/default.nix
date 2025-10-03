@@ -245,7 +245,7 @@ in {
               crowdsecAppsecFailureBlock = true;
               crowdsecAppsecUnreachableBlock = true;
               crowdsecAppsecBodyLimit = 10485760;
-              crowdsecLapiKey = "{{ env \"BOUNCER_KEY_TRAEFIK\" }}";
+              crowdsecLapiKey = "{{ env `BOUNCER_KEY_TRAEFIK` }}";
               crowdsecLapiScheme = "http";
               crowdsecLapiHost = "crowdsec:8080";
               crowdsecLapiPath = "/";

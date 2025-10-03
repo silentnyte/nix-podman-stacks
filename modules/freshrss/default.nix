@@ -142,35 +142,33 @@ in {
           ADMIN_PASSWORD.fromFile = cfg.adminProvisioning.passwordFile;
           ADMIN_API_PASSWORD.fromFile = cfg.adminProvisioning.apiPasswordFile;
 
-          FRESHRSS_INSTALL = "'${
-            lib.concatStringsSep " " [
-              "--api-enabled"
-              "--base-url ${cfg.containers.${name}.traefik.serviceUrl}"
-              "--default-user \\$\\$\{ADMIN_USERNAME\}"
-              "--language en"
-            ]
-          }'";
+          FRESHRSS_INSTALL.fromTemplate = lib.concatStringsSep " " [
+            "--api-enabled"
+            "--base-url ${cfg.containers.${name}.traefik.serviceUrl}"
+            "--default-user ${cfg.adminProvisioning.username}"
+            "--language en"
+          ];
 
-          FRESHRSS_USER = "'${
-            lib.concatStringsSep " " [
-              "--api-password \\$\\$\{ADMIN_API_PASSWORD\}"
-              "--email \\$\\$\{ADMIN_EMAIL\}"
-              "--language en"
-              "--password \\$\\$\{ADMIN_PASSWORD\}"
-              "--user \\$\\$\{ADMIN_USERNAME\}"
-            ]
-          }'";
+          FRESHRSS_USER.fromTemplate = lib.concatStringsSep " " [
+            "--api-password {{ file.Read `${cfg.adminProvisioning.apiPasswordFile}`}}"
+            "--email ${cfg.adminProvisioning.email}"
+            "--language en"
+            "--password {{ file.Read `${cfg.adminProvisioning.passwordFile}`}}"
+            "--user ${cfg.adminProvisioning.username}"
+          ];
         }
-        // lib.optionalAttrs cfg.oidc.enable {
+        // lib.optionalAttrs cfg.oidc.enable (let
+          utils = import ../utils.nix {inherit lib config;};
+        in {
           OIDC_ENABLED = 1;
           OIDC_PROVIDER_METADATA_URL = "${config.nps.containers.authelia.traefik.serviceUrl}/.well-known/openid-configuration";
           OIDC_CLIENT_ID = name;
           OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
           OIDC_CLIENT_CRYPTO_KEY = cfg.oidc.cryptoKeyFile;
           OIDC_REMOTE_USER_CLAIM = "preferred_username";
-          OIDC_SCOPES = ''\"openid groups email profile\"'';
-          OIDC_X_FORWARDED_HEADERS = ''\"X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto\"'';
-        };
+          OIDC_SCOPES = utils.escapeOnDemand ''"openid groups email profile"'';
+          OIDC_X_FORWARDED_HEADERS = utils.escapeOnDemand ''"X-Forwarded-Host X-Forwarded-Port X-Forwarded-Proto"'';
+        });
 
       port = 80;
       traefik.name = name;

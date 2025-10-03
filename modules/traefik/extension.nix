@@ -1,8 +1,10 @@
 {
   lib,
   config,
+  pkgs,
   ...
 }: let
+  utils = pkgs.callPackage ../utils.nix {inherit config;};
   stackCfg = config.nps.stacks.traefik;
 
   ip4Address = config.nps.hostIP4Address;
@@ -187,7 +189,7 @@ in {
             labels = lib.optionalAttrs enableTraefik (
               {
                 "traefik.enable" = "true";
-                "traefik.http.routers.${name}.rule" = ''Host(\`${traefikCfg.serviceHost}\`)'';
+                "traefik.http.routers.${name}.rule" = utils.escapeOnDemand ''Host(`${traefikCfg.serviceHost}`)'';
                 # "traefik.http.routers.${name}.entrypoints" = "websecure,websecure-internal";
                 "traefik.http.routers.${name}.service" = lib.mkDefault name;
               }

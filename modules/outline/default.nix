@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   name = "outline";
@@ -138,7 +139,9 @@ in {
       ${name} = {
         image = "docker.io/outlinewiki/outline:0.87.4";
         volumes = ["${storage}/data:/var/lib/outline/data"];
-        extraEnv =
+        extraEnv = let
+          utils = import ../utils.nix {inherit lib config;};
+        in
           {
             URL = cfg.containers.${name}.traefik.serviceUrl;
             PORT = 3000;
@@ -152,7 +155,7 @@ in {
             OIDC_ISSUER_URL = config.nps.containers.authelia.traefik.serviceUrl;
             OIDC_CLIENT_ID = name;
             OIDC_CLIENT_SECRET.fromFile = cfg.oidc.clientSecretFile;
-            OIDC_SCOPES = ''\"openid offline_access profile email\"'';
+            OIDC_SCOPES = utils.escapeOnDemand ''"openid offline_access profile email"'';
             OIDC_DISPLAY_NAME = "Authelia";
           }
           // cfg.extraEnv;
