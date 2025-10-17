@@ -626,7 +626,7 @@ in {
           templatePath = yaml.generate "auth.yaml" {ntfy.auth.token = "{{file.Read `${cfg.alertmanager.ntfy.tokenFile}`}}";};
           destPath = "/etc/auth.yml";
         };
-        exec = "--configs /etc/config.yml,/etc/auth.yml";
+        exec = "--configs /etc/config.yml" + lib.optionalString (cfg.alertmanager.ntfy.tokenFile != null) ",/etc/auth.yml";
 
         # Join both ntfy and monitoring network
         stack = stackName;
