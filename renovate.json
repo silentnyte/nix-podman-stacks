@@ -1,19 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "prHourlyLimit": 0,
-  "extends": [
-    "config:recommended",
-    "docker:enableMajor"
-  ],
+  "extends": ["config:recommended", "docker:enableMajor"],
   "timezone": "Europe/Berlin",
-  "gitIgnoredAuthors": [
-    "195547385+tarow[bot]@users.noreply.github.com"
-  ],
+  "gitIgnoredAuthors": ["195547385+tarow[bot]@users.noreply.github.com"],
   "lockFileMaintenance": {
     "enabled": true,
-    "schedule": [
-      "* 0-3 * * 0"
-    ],
+    "schedule": ["* 0-3 * * 0"],
     "automergeType": "pr",
     "automerge": true
   },
@@ -23,49 +16,30 @@
   "platformAutomerge": true,
   "packageRules": [
     {
-      "matchUpdateTypes": [
-        "minor",
-        "patch",
-        "digest"
-      ],
+      "matchUpdateTypes": ["minor", "patch", "digest"],
       "matchCurrentVersion": "!/^v?0\\./",
       "automerge": true,
       "automergeType": "pr"
     },
     {
-      "matchManagers": [
-        "custom.regex"
-      ],
+      "matchManagers": ["custom.regex"],
       "additionalBranchPrefix": "{{parentDir}}-"
     },
     {
       "description": "Multi-Container Projects",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/immich-app/",
-        "/beszel/",
-        "/guacamole/"
-      ],
-      "groupName": "{{parentDir}}",
-      "automerge": false
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/immich-app/", "/beszel/", "/guacamole/"],
+      "groupName": "{{parentDir}}"
     },
     {
       "description": "IT-Tools",
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/it-tools/"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/it-tools/"],
       "automerge": false
     },
     {
       "description": "Disable Updates",
-      "matchDatasources": [
-        "docker"
-      ],
+      "matchDatasources": ["docker"],
       "matchPackageNames": [
         "/postgres/",
         "/mysql/",
@@ -77,30 +51,18 @@
       "enabled": false
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/linuxserver/jellyfin/"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/linuxserver/jellyfin/"],
       "allowedVersions": "<1000"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/linuxserver/qbittorrent/"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/linuxserver/qbittorrent/"],
       "allowedVersions": "<14"
     },
     {
-      "matchDatasources": [
-        "docker"
-      ],
-      "matchPackageNames": [
-        "/lldap/lldap/"
-      ],
+      "matchDatasources": ["docker"],
+      "matchPackageNames": ["/lldap/lldap/"],
       "allowedVersions": "/^.+-alpine-rootless$/",
       "automerge": false
     }
@@ -108,9 +70,7 @@
   "customManagers": [
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/.*\\.nix$/"
-      ],
+      "managerFilePatterns": ["/.*\\.nix$/"],
       "matchStrings": [
         "(?<depName>[a-zA-Z0-9_.-]+)\\s*=\\s*\\{[^}]*moduleName\\s*=\\s*\"(?<moduleName>[^\"]+)\";[^}]*version\\s*=\\s*\"(?<currentValue>v?[0-9][^\"]*)\";"
       ],
@@ -120,9 +80,7 @@
     },
     {
       "customType": "regex",
-      "managerFilePatterns": [
-        "/.*\\.nix$/"
-      ],
+      "managerFilePatterns": ["/.*\\.nix$/"],
       "matchStrings": [
         "(?:# renovate: (?:versioning=(?<versioning>[^\\s]+)\\s+)?(?:extractVersion=(?<extractVersion>[^\\s]+)\\s*)?)?image\\s*=\\s*\"(?<depName>[^:\"]+):(?<currentValue>[^\"\\s]+)\"\\s*;"
       ],
