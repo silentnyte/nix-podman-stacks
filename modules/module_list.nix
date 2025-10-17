@@ -50,6 +50,7 @@ let
     stirling-pdf = ./stirling-pdf;
     storyteller = ./storyteller;
     streaming = ./streaming;
+    timetracker = ./timetracker;
     traefik = ./traefik;
     uptime-kuma = ./uptime-kuma;
     vaultwarden = ./vaultwarden;

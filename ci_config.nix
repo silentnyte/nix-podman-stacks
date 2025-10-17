@@ -603,6 +603,17 @@ in {
           extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
         });
 
+      timetracker = {
+        enable = true;
+        secretKeyFile = config.sops.secrets."timetracker/secret_key".path;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyHash;
+        };
+        db.passwordFile = config.sops.secrets."timetracker/db_password".path;
+      };
+
       traefik = {
         enable = true;
         domain = "example.com";
