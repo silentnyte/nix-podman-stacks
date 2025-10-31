@@ -97,6 +97,17 @@ in {
         extraEnv.JWT_SECRET.fromFile = dummySecretFile;
       };
 
+      booklore = {
+        enable = true;
+        oidc = {
+          registerClient = true;
+        };
+        db = {
+          userPasswordFile = dummySecretFile;
+          rootPasswordFile = dummySecretFile;
+        };
+      };
+
       calibre.enable = true;
 
       changedetection.enable = true;

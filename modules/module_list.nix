@@ -8,6 +8,7 @@ let
     baikal = ./baikal;
     beszel = ./beszel;
     blocky = ./blocky;
+    booklore = ./booklore;
     bytestash = ./bytestash;
     calibre = ./calibre;
     changedetection = ./changedetection;

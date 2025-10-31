@@ -51,6 +51,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/baikal.png" style="width:1em;height:1em;" /> [Baikal](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/baikal/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/beszel.svg" style="width:1em;height:1em;" /> [Beszel](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/beszel/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/blocky.svg" style="width:1em;height:1em;" /> [Blocky](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/blocky/default.nix)
+- <img src="https://cdn.jsdelivr.net/gh/selfhst/icons/webp/booklore.webp" style="height:1em;" /> [Booklore](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/booklore/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/bytestash.svg" style="width:1em;height:1em;" /> [ByteStash](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/bytestash/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/calibre-web.svg" style="width:1em;height:1em;" /> [Calibre-Web](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/calibre/default.nix)
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/calibre-web.svg" style="width:1em;height:1em;" /> Calibre-Web Automated
