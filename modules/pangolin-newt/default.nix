@@ -84,6 +84,9 @@ in {
       volumes = [
         "${cfg.settings}:/app/config.yml"
       ];
+
+      extraEnv = cfg.extraEnv;
+
       port = 2112;
       traefik.name = name;
       homepage = {
