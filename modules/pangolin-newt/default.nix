@@ -15,15 +15,20 @@
   displayName = "Pangolin Newt";
   description = "A tunneling client for Pangolin";
 in {
-  imports = import ../mkAliases.nix config lib name [name];
+  imports =
+    [
+      ./extension.nix
+      (import ../docker-socket-proxy/mkSocketProxyOptionModule.nix {stack = name;})
+    ]
+    ++ import ../mkAliases.nix config lib name [name];
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
     settings = lib.mkOption {
       type = yaml.type;
-      apply = yaml.generate "config.yml";
+      apply = yaml.generate "config.json";
       description = ''
-        Pangolin Newt configuration. Will be converted to the `config.yml`.
+        Pangolin Newt configuration. Will be converted to the `config.json`.
         For a full list of options, refer to the [Pangolin Newt documentation](https://docs.pangolin.net/manage/clients/add-client)
       '';
     };
@@ -82,10 +87,15 @@ in {
     services.podman.containers.${name} = {
       image = "ghcr.io/fosrl/newt:1.6.0";
       volumes = [
-        "${cfg.settings}:/app/config.yml"
+        # "${cfg.settings}:/root/.config/newt-client/config.json"
+        "${config.nps.socketLocation}:/var/run/docker.sock:ro"
       ];
 
-      extraEnv = cfg.extraEnv;
+      extraEnv =
+        {
+          DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
+        }
+        // cfg.extraEnv;
 
       port = 2112;
       traefik.name = name;
