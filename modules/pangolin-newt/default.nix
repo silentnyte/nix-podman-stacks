@@ -74,7 +74,7 @@ in {
     nps.stacks.monitoring.prometheus.settings = lib.mkIf cfg.enablePrometheusExport {
       scrape_configs = [
         {
-          job_name = "${name}";
+          job_name = "pangolin-newt";
           honor_timestamps = true;
           metrics_path = "/metrics";
           scheme = "http";
