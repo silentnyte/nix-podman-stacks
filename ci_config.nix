@@ -493,6 +493,19 @@ in {
         };
       };
 
+      pangolin-newt = {
+        enable = true;
+        enableGrafanaDashboard = true;
+        enablePrometheusExport = true;
+        extraEnv = {
+          PANGOLIN_ENDPOINT.fromFile = dummySecretFile;
+          NEWT_ID.fromFile = dummySecretFile;
+          NEWT_SECRET.fromFile = dummySecretFile;
+          NEWT_METRICS_PROMETHEUS_ENABLED = "true";
+          LOG_LEVEL = "INFO";
+        };
+      };
+
       paperless = {
         enable = true;
         adminProvisioning = {
