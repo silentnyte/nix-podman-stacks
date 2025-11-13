@@ -48,6 +48,12 @@
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
         "name": "Annotations & Alerts",
+        "target": {
+          "limit": 100,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
         "type": "dashboard"
       }
     ]
@@ -58,6 +64,7 @@
   "graphTooltip": 0,
   "id": null,
   "links": [],
+  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
@@ -67,9 +74,9 @@
         "x": 0,
         "y": 0
       },
-      "id": 8,
+      "id": 1,
       "panels": [],
-      "title": "CPU",
+      "title": "1. Key Performance Indicators (KPIs)",
       "type": "row"
     },
     {
@@ -80,101 +87,312 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
+            "mode": "thresholds"
           },
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
             "steps": [
               {
-                "color": "green"
+                "color": "red",
+                "value": null
               },
               {
-                "color": "red",
-                "value": 80
+                "color": "green",
+                "value": 1
               }
             ]
           },
-          "unit": "percent"
+          "unit": "none"
         },
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
+        "h": 8,
+        "w": 6,
         "x": 0,
         "y": 1
       },
-      "id": 20,
+      "id": 8,
       "options": {
-        "legend": {
-          "calcs": ["mean", "max"],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/.*/",
+          "values": false
         },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
+        "textMode": "value"
       },
-      "pluginVersion": "12.0.2",
+      "pluginVersion": "10.0.3",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "expr": "sum by (name) (newt_container_info{instance=~'$instance', name=~\"$name\"} * on(id) group_right (name) rate(newt_container_cpu_seconds_total[1m]) * 100)",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "interval": "",
-          "legendFormat": "__auto",
-          "range": true,
-          "refId": "A",
-          "useBackend": false
+          "expr": "newt_websocket_connected",
+          "instant": true,
+          "legendFormat": "{{instance}}",
+          "refId": "A"
         }
       ],
-      "title": "CPU Usage",
+      "title": "WebSocket Connection State (1=Up)",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 6,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "rate"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(rate(newt_connection_attempts_total[$__interval]))",
+          "legendFormat": "Connection Attempts Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "Connection Attempts Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+          },
+        "overrides": []
+            },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 12,
+        "y": 1
+          },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "rate"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+              },
+      "pluginVersion": "10.0.3",
+      "targets": [
+              {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(rate(newt_site_registrations_total[$__interval]))",
+          "legendFormat": "Site Registrations Rate",
+          "refId": "A"
+              }
+      ],
+      "title": "Site Registrations Rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+          },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 6,
+        "x": 18,
+        "y": 1
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "rate"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "value"
+      },
+      "pluginVersion": "10.0.3",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "sum(rate(newt_websocket_messages_total[$__interval]))",
+          "legendFormat": "WS Message Rate",
+          "refId": "A"
+        }
+      ],
+      "title": "WebSocket Message Rate",
+      "type": "stat"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 9
+      },
+      "id": 9,
+      "panels": [],
+      "title": "2. Proxy and Connection Trends",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "conn"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 10
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "newt_proxy_active_connections",
+          "legendFormat": "{{tunnel}}/{{protocol}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Proxy Active Connections",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 10
+      },
+      "id": 3,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "newt_proxy_async_backlog_bytes",
+          "legendFormat": "Async Backlog: {{tunnel}}/{{protocol}}",
+          "refId": "A"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "expr": "newt_proxy_buffer_bytes",
+          "legendFormat": "Buffer Bytes: {{tunnel}}/{{protocol}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Proxy Buffer and Async Backlog (Bytes)",
       "type": "timeseries"
     },
     {
@@ -183,125 +401,11 @@
         "h": 1,
         "w": 24,
         "x": 0,
-        "y": 8
-      },
-      "id": 11,
-      "panels": [],
-      "title": "Memory",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "normal"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "gbytes"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 9,
-        "w": 24,
-        "x": 0,
-        "y": 9
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": ["mean", "max"],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by (name) (\n    newt_container_info{instance=~\"$instance\", name=~\"$name\"}\n  * on (id) group_right (name)\n    (newt_container_mem_usage_bytes / 1024 / 1024 / 1024)\n)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{name}}",
-          "range": true,
-          "refId": "A"
-        }
-      ],
-      "title": "Memory Usage",
-      "type": "timeseries"
-    },
-    {
-      "collapsed": true,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
         "y": 18
       },
-      "id": 2,
+      "id": 10,
       "panels": [],
-      "title": "Network",
+      "title": "3. Latency (Histogram Quantiles)",
       "type": "row"
     },
     {
@@ -311,167 +415,61 @@
       },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Bytes/sec",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "Bps"
-        },
+          "unit": "s"
+                      },
         "overrides": []
-      },
+                    },
       "gridPos": {
         "h": 8,
         "w": 12,
         "x": 0,
         "y": 19
-      },
-      "id": 14,
-      "options": {
+                  },
+      "id": 6,
+                    "options": {
         "legend": {
-          "calcs": ["mean", "max"],
-          "displayMode": "table",
-          "placement": "right",
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
           "showLegend": true
-        },
+              },
         "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
-        }
-      },
-      "pluginVersion": "12.0.2",
+              }
+          },
       "targets": [
-        {
+          {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "expr": "sum by(name) (newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on(id) group_right(name) rate(newt_container_net_input_total[1m]) / 1024)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{name}} - Read",
-          "range": true,
+            },
+          "expr": "histogram_quantile(0.90, sum(rate(newt_tunnel_latency_seconds_bucket[$__interval])) by (le, tunnel))",
+          "legendFormat": "P90 - {{tunnel}}",
           "refId": "A"
-        },
-        {
+          },
+          {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
-          },
-          "expr": "sum(rate(newt_container_blkio_device_write_bytes_total{instance=~\"$host\",name=~\"$container\"}[5m])) by (name)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{name}} - Write",
+            },
+          "expr": "histogram_quantile(0.99, sum(rate(newt_tunnel_latency_seconds_bucket[$__interval])) by (le, tunnel))",
+          "legendFormat": "P99 - {{tunnel}}",
           "refId": "B"
-        }
+              }
       ],
-      "title": "Recieved Network Traffic",
+      "title": "Tunnel Latency (P90 & P99)",
       "type": "timeseries"
-    },
-    {
+              },
+              {
       "datasource": {
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
-      },
+              },
       "fieldConfig": {
         "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisLabel": "Bytes/sec",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "line",
-            "fillOpacity": 10,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "never",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
+          "unit": "s"
               },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
-          },
-          "unit": "Bps"
-        },
         "overrides": []
       },
       "gridPos": {
@@ -480,35 +478,27 @@
         "x": 12,
         "y": 19
       },
-      "id": 17,
+      "id": 7,
       "options": {
         "legend": {
-          "calcs": ["mean", "max"],
-          "displayMode": "table",
-          "placement": "right",
-          "showLegend": true,
-          "sortBy": "Max",
-          "sortDesc": false
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
-          "mode": "multi",
+          "mode": "single",
           "sort": "none"
-        }
+          }
       },
-      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "expr": "sum by(name) (newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on(id) group_right(name) rate(newt_container_net_output_total[1m]) / 1024)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{name}} - Read",
-          "range": true,
+          "expr": "histogram_quantile(0.90, sum(rate(newt_websocket_connect_latency_seconds_bucket[$__interval])) by (le, instance))",
+          "legendFormat": "P90 Connect Latency",
           "refId": "A"
         },
         {
@@ -516,475 +506,76 @@
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "expr": "sum(rate(newt_container_blkio_device_write_bytes_total{instance=~\"$host\",name=~\"$container\"}[5m])) by (name)",
-          "hide": false,
-          "interval": "",
-          "legendFormat": "{{name}} - Write",
+          "expr": "histogram_quantile(0.99, sum(rate(newt_websocket_connect_latency_seconds_bucket[$__interval])) by (le, instance))",
+          "legendFormat": "P99 Connect Latency",
           "refId": "B"
         }
       ],
-      "title": "Sent Network Traffic",
+      "title": "WebSocket Connect Latency (P90 & P99)",
       "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "${DS_PROMETHEUS}"
-      },
-      "description": "",
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "thresholds"
-          },
-          "custom": {
-            "align": "center",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "green"
-              }
-            ]
-          }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Memory"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "bytes"
-              },
-              {
-                "id": "custom.width",
-                "value": 90
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Status"
-            },
-            "properties": [
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "#c0c0c0",
-                        "index": 1,
-                        "text": "created"
-                      },
-                      "1": {
-                        "index": 2,
-                        "text": "initialized"
-                      },
-                      "2": {
-                        "color": "green",
-                        "index": 3,
-                        "text": "running"
-                      },
-                      "3": {
-                        "index": 4,
-                        "text": "stopped"
-                      },
-                      "4": {
-                        "color": "#808081",
-                        "index": 5,
-                        "text": "paused"
-                      },
-                      "5": {
-                        "color": "red",
-                        "index": 6,
-                        "text": "exited"
-                      },
-                      "6": {
-                        "color": "yellow",
-                        "index": 7,
-                        "text": "removing"
-                      },
-                      "7": {
-                        "color": "yellow",
-                        "index": 8,
-                        "text": "stopping"
-                      },
-                      "-1": {
-                        "color": "red",
-                        "index": 0,
-                        "text": "unknown"
-                      }
-                    },
-                    "type": "value"
-                  }
-                ]
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "custom.width",
-                "value": 75
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Exit code"
-            },
-            "properties": [
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "type": "color-text"
-                }
-              },
-              {
-                "id": "mappings",
-                "value": [
-                  {
-                    "options": {
-                      "0": {
-                        "color": "#808080",
-                        "index": 0,
-                        "text": "none"
-                      }
-                    },
-                    "type": "value"
-                  },
-                  {
-                    "options": {
-                      "from": 1,
-                      "result": {
-                        "color": "red",
-                        "index": 1
-                      },
-                      "to": 255
-                    },
-                    "type": "range"
-                  }
-                ]
-              },
-              {
-                "id": "custom.width",
-                "value": 75
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Uptime"
-            },
-            "properties": [
-              {
-                "id": "unit",
-                "value": "s"
-              },
-              {
-                "id": "custom.width",
-                "value": 90
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "PID"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 50
-              },
-              {
-                "id": "decimals",
-                "value": 0
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Host"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 297
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "ID"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 121
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Mem Usage"
-            },
-            "properties": [
-              {
-                "id": "custom.width",
-                "value": 100
-              },
-              {
-                "id": "unit",
-                "value": "percentunit"
-              },
-              {
-                "id": "color",
-                "value": {
-                  "mode": "continuous-GrYlRd"
-                }
-              },
-              {
-                "id": "custom.cellOptions",
-                "value": {
-                  "mode": "gradient",
-                  "type": "gauge"
-                }
-              },
-              {
-                "id": "decimals",
-                "value": 2
-              }
-            ]
-          }
-        ]
-      },
+        {
+      "collapsed": false,
       "gridPos": {
-        "h": 9,
+        "h": 1,
         "w": 24,
         "x": 0,
         "y": 27
-      },
-      "id": 21,
+          },
+      "id": 11,
+      "panels": [],
+      "title": "4. Build Info",
+      "type": "row"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+        },
+          "mappings": [],
+          "unit": "none"
+          },
+        "overrides": []
+        },
+      "gridPos": {
+        "h": 4,
+        "w": 24,
+        "x": 0,
+        "y": 28
+          },
+      "id": 12,
       "options": {
-        "cellHeight": "sm",
         "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": ["sum"],
           "show": false
         },
-        "frameIndex": 1,
-        "showHeader": true,
-        "sortBy": [
-          {
-            "desc": true,
-            "displayName": "Mem Usage"
-          }
-        ]
+        "header": {
+          "show": true
+        }
       },
-      "pluginVersion": "12.0.2",
       "targets": [
         {
           "datasource": {
             "type": "prometheus",
             "uid": "${DS_PROMETHEUS}"
           },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "newt_container_info{instance=~\"$instance\", name=~\"$name\"}",
-          "format": "table",
-          "hide": false,
+          "expr": "newt_build_info",
           "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "info"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (newt_container_state))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "状态",
-          "range": false,
-          "refId": "state"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (newt_container_mem_usage_bytes))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "momery"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (newt_container_exit_code))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "exit_code"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (time() - newt_container_started_seconds))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "uptime"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (newt_container_pids))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "PID"
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "${DS_PROMETHEUS}"
-          },
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "(newt_container_info{instance=~\"$instance\", name=~\"$name\"} * on (id) group_right (name) (newt_container_mem_usage_bytes / (newt_container_mem_limit_bytes)))",
-          "format": "table",
-          "hide": false,
-          "instant": true,
-          "legendFormat": "__auto",
-          "range": false,
-          "refId": "mem_percentage"
+          "legendFormat": "Newt Build Info",
+          "refId": "A"
         }
       ],
-      "title": "Container Overview",
-      "transformations": [
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "id",
-                "image",
-                "instance",
-                "name",
-                "ports",
-                "Value #state",
-                "Value #momery",
-                "Value #exit_code",
-                "Value #uptime",
-                "Value #PID",
-                "Value #mem_percentage"
-              ]
-            }
-          }
-        },
-        {
-          "id": "merge",
-          "options": {}
-        },
-        {
-          "id": "organize",
-          "options": {
-            "excludeByName": {
-              "Time": true,
-              "Value": true,
-              "Value #A": true,
-              "__name__": true,
-              "job": true
-            },
-            "indexByName": {
-              "Value #PID": 8,
-              "Value #exit_code": 10,
-              "Value #mem_percentage": 4,
-              "Value #momery": 3,
-              "Value #state": 7,
-              "Value #uptime": 9,
-              "id": 1,
-              "image": 5,
-              "instance": 2,
-              "name": 0,
-              "ports": 6
-            },
-            "renameByName": {
-              "Value": "",
-              "Value #B": "状态",
-              "Value #C": "退出代码",
-              "Value #PID": "PID",
-              "Value #exit_code": "Exit code",
-              "Value #ext_code": "错误代码",
-              "Value #mem_max": "内存使用率",
-              "Value #mem_percentage": "Mem Usage",
-              "Value #momery": "Memory",
-              "Value #state": "Status",
-              "Value #uptime": "Uptime",
-              "id": "ID",
-              "image": "Image",
-              "instance": "Host",
-              "name": "name",
-              "ports": "Port",
-              "state": "状态"
-            }
-          }
-        }
-      ],
+      "title": "Newt Build Details",
       "type": "table"
     }
   ],
   "refresh": "auto",
   "schemaVersion": 41,
+  "style": "dark",
   "tags": [],
   "templating": {
     "list": [
@@ -993,6 +584,7 @@
           "text": "Default",
           "value": "default"
         },
+        "hide": 0,
         "label": "datasource",
         "name": "DS_PROMETHEUS",
         "options": [],
@@ -1000,49 +592,6 @@
         "refresh": 1,
         "regex": "",
         "type": "datasource"
-      },
-      {
-        "allValue": ".*",
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(newt_container_info{instance=~\"$instance\"},instance)",
-        "includeAll": true,
-        "label": "Host",
-        "name": "instance",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(newt_container_info{instance=~\"$instance\"},instance)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "sort": 5,
-        "type": "query"
-      },
-      {
-        "allValue": ".*",
-        "current": {},
-        "datasource": {
-          "type": "prometheus",
-          "uid": "${DS_PROMETHEUS}"
-        },
-        "definition": "label_values(newt_container_info{name=~\"$name\", instance=~\"$instance\"},name)",
-        "includeAll": true,
-        "label": "Container",
-        "name": "name",
-        "options": [],
-        "query": {
-          "qryType": 1,
-          "query": "label_values(newt_container_info{name=~\"$name\", instance=~\"$instance\"},name)",
-          "refId": "PrometheusVariableQueryEditor-VariableQuery"
-        },
-        "refresh": 1,
-        "regex": "",
-        "type": "query"
       }
     ]
   },

@@ -23,14 +23,14 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    settings = lib.mkOption {
-      type = yaml.type;
-      apply = yaml.generate "config.json";
-      description = ''
-        Pangolin Newt configuration. Will be converted to the `config.json`.
-        For a full list of options, refer to the [Pangolin Newt documentation](https://docs.pangolin.net/manage/clients/add-client)
-      '';
-    };
+    # settings = lib.mkOption {
+    #   type = yaml.type;
+    #   apply = yaml.generate "config.json";
+    #   description = ''
+    #     Pangolin Newt configuration. Will be converted to the `config.json`.
+    #     For a full list of options, refer to the [Pangolin Newt documentation](https://docs.pangolin.net/manage/clients/add-client)
+    #   '';
+    # };
     enableGrafanaDashboard = lib.mkEnableOption "Grafana Dashboard";
     enablePrometheusExport = lib.mkEnableOption "Prometheus Export";
 
@@ -59,15 +59,15 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    nps.stacks.${name}.settings = lib.mkMerge [
-      (import ./settings.nix)
-      (lib.mkIf config.nps.stacks.traefik.enable {
-        customDNS.mapping.${config.nps.stacks.traefik.domain} = ip;
-      })
-      (lib.mkIf cfg.enablePrometheusExport {
-        prometheus.enable = true;
-      })
-    ];
+    # nps.stacks.${name}.settings = lib.mkMerge [
+    #   (import ./settings.nix)
+    #   (lib.mkIf config.nps.stacks.traefik.enable {
+    #     customDNS.mapping.${config.nps.stacks.traefik.domain} = ip;
+    #   })
+    #   (lib.mkIf cfg.enablePrometheusExport {
+    #     prometheus.enable = true;
+    #   })
+    # ];
     nps.stacks.monitoring.grafana = lib.mkIf cfg.enableGrafanaDashboard {
       dashboards = [./grafana_dashboard.json];
       settings.panels.disable_sanitize_html = true;
@@ -96,9 +96,6 @@ in {
           DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
         }
         // cfg.extraEnv;
-      # ports = [
-      #   "0.0.0.0:2112:2112/tcp"
-      # ];
       port = 2112;
       traefik.name = name;
       homepage = {
