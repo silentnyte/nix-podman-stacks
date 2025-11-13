@@ -52,6 +52,7 @@ in {
           fromFile = "/run/secrets/secret_name";
         };
         NEWT_METRICS_PROMETHEUS_ENABLED = "true";
+        NEWT_ADMIN_ADDR = ":2112";
         LOG_LEVEL = "INFO";
       };
     };
@@ -95,7 +96,9 @@ in {
           DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
         }
         // cfg.extraEnv;
-
+      # ports = [
+      #   "0.0.0.0:2112:2112/tcp"
+      # ];
       port = 2112;
       traefik.name = name;
       homepage = {
@@ -103,14 +106,14 @@ in {
         name = displayName;
         settings = {
           inherit description;
-          icon = "pangolin-newt";
+          icon = "pangolin";
         };
       };
       glance = {
         inherit category description;
         name = displayName;
         id = name;
-        icon = "di:pangolin-newt";
+        icon = "di:pangolin";
       };
     };
   };
