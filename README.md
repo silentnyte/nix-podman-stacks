@@ -99,6 +99,7 @@ There is also an [Option Search](https://tarow.github.io/nix-podman-stacks/searc
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/ntfy.svg" style="width:1em;height:1em;" /> [ntfy](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/ntfy/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/omni-tools.png" style="width:1em;" /> [OmniTools](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/omnitools/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/outline.svg" style="width:1em;" /> [Outline](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/outline/default.nix)
+- <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/pangolin.svg" style="width:1em;height:1em;" /> [Pangolin-Newt](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/pangolin-newt/default.nix)
 - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless.svg" style="width:1em;height:1em;" /> [Paperless-ngx](https://github.com/Tarow/nix-podman-stacks/tree/main/modules/paperless/default.nix)
   - <img src="https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/paperless.svg" style="width:1em;height:1em;" /> Paperless-ngx
   - 📂 FTP Server

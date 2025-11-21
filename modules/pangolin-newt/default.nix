@@ -1,15 +1,10 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }: let
   name = "pangolin-newt";
   cfg = config.nps.stacks.${name};
-
-  yaml = pkgs.formats.yaml {};
-
-  ip = config.nps.hostIP4Address;
 
   category = "Network & Administration";
   displayName = "Pangolin Newt";
@@ -23,14 +18,6 @@ in {
 
   options.nps.stacks.${name} = {
     enable = lib.mkEnableOption name;
-    # settings = lib.mkOption {
-    #   type = yaml.type;
-    #   apply = yaml.generate "config.json";
-    #   description = ''
-    #     Pangolin Newt configuration. Will be converted to the `config.json`.
-    #     For a full list of options, refer to the [Pangolin Newt documentation](https://docs.pangolin.net/manage/clients/add-client)
-    #   '';
-    # };
     enableGrafanaDashboard = lib.mkEnableOption "Grafana Dashboard";
     enablePrometheusExport = lib.mkEnableOption "Prometheus Export";
 
@@ -59,15 +46,6 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    # nps.stacks.${name}.settings = lib.mkMerge [
-    #   (import ./settings.nix)
-    #   (lib.mkIf config.nps.stacks.traefik.enable {
-    #     customDNS.mapping.${config.nps.stacks.traefik.domain} = ip;
-    #   })
-    #   (lib.mkIf cfg.enablePrometheusExport {
-    #     prometheus.enable = true;
-    #   })
-    # ];
     nps.stacks.monitoring.grafana = lib.mkIf cfg.enableGrafanaDashboard {
       dashboards = [./grafana_dashboard.json];
       settings.panels.disable_sanitize_html = true;
@@ -86,11 +64,6 @@ in {
 
     services.podman.containers.${name} = {
       image = "ghcr.io/fosrl/newt:1.6.0";
-      volumes = [
-        # "${cfg.settings}:/root/.config/newt-client/config.json"
-        "${config.nps.socketLocation}:/var/run/docker.sock:ro"
-      ];
-
       extraEnv =
         {
           DOCKER_SOCKET = lib.mkIf (cfg.useSocketProxy) config.nps.stacks.docker-socket-proxy.address;
