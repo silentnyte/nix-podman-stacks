@@ -211,7 +211,7 @@ in {
 
   config = lib.mkIf cfg.enable {
     # If Flaresolverr is enabled, enable it & connect it to the streaming stack network
-    nps.stacks.flaresolverr.enable = cfg.flaresolverr.enable;
+    nps.stacks.flaresolverr.enable = lib.mkIf cfg.flaresolverr.enable true;
     nps.containers.flaresolverr = lib.mkIf cfg.flaresolverr.enable {
       network = [stackName];
     };

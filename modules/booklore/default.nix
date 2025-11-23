@@ -10,7 +10,7 @@
 
   cfg = config.nps.stacks.${name};
 
-  category = "General";
+  category = "Media & Downloads";
   description = "Book Collection Manager";
   displayName = "booklore";
 in {

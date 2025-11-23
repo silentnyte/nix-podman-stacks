@@ -18,8 +18,10 @@ let
     donetick = ./donetick;
     dozzle = ./dozzle;
     docker-socket-proxy = ./docker-socket-proxy;
+    ephemera = ./ephemera;
     filebrowser = ./filebrowser;
     filebrowser-quantum = ./filebrowser-quantum;
+    flaresolverr = ./flaresolverr;
     forgejo = ./forgejo;
     freshrss = ./freshrss;
     gatus = ./gatus;
