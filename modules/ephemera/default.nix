@@ -34,7 +34,7 @@ in {
         Extra environment variables to set for the container.
         Variables can be either set directly or sourced from a file (e.g. for secrets).
 
-        See <https://github.com/crowdsecurity/crowdsec/blob/master/docker/README.md#environment-variables>
+        See <https://github.com/OrwellianEpilogue/ephemera?tab=readme-ov-file#optional-environment-variables>
       '';
       example = {
         AA_API_KEY = {
