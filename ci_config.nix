@@ -172,6 +172,15 @@ in {
         };
       };
 
+      ephemera = {
+        enable = true;
+        downloadDirectory = "${config.nps.storageBaseDir}/booklore/bookdrop";
+        extraEnv = {
+          AA_API_KEY.fromFile = dummySecretFile;
+          AA_BASE_URL = "https://some-archive.org";
+        };
+      };
+
       filebrowser = {
         enable = true;
         mounts = {
