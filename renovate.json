@@ -28,7 +28,12 @@
     {
       "description": "Multi-Container Projects",
       "matchDatasources": ["docker"],
-      "matchPackageNames": ["/immich-app/", "/beszel/", "/guacamole/"],
+      "matchPackageNames": [
+        "/immich-app/",
+        "/beszel/",
+        "/guacamole/",
+        "/kitchenowl/"
+      ],
       "groupName": "{{parentDir}}"
     },
     {

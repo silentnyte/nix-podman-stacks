@@ -18,8 +18,10 @@ let
     donetick = ./donetick;
     dozzle = ./dozzle;
     docker-socket-proxy = ./docker-socket-proxy;
+    ephemera = ./ephemera;
     filebrowser = ./filebrowser;
     filebrowser-quantum = ./filebrowser-quantum;
+    flaresolverr = ./flaresolverr;
     forgejo = ./forgejo;
     freshrss = ./freshrss;
     gatus = ./gatus;
@@ -33,6 +35,7 @@ let
     ittools = ./it-tools;
     karakeep = ./karakeep;
     kimai = ./kimai;
+    kitchenowl = ./kitchenowl;
     komga = ./komga;
     lldap = ./lldap;
     mazanoke = ./mazanoke;
@@ -53,6 +56,7 @@ let
     stirling-pdf = ./stirling-pdf;
     storyteller = ./storyteller;
     streaming = ./streaming;
+    tandoor = ./tandoor;
     timetracker = ./timetracker;
     traefik = ./traefik;
     uptime-kuma = ./uptime-kuma;

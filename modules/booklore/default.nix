@@ -10,7 +10,7 @@
 
   cfg = config.nps.stacks.${name};
 
-  category = "General";
+  category = "Media & Downloads";
   description = "Book Collection Manager";
   displayName = "booklore";
 in {
@@ -109,7 +109,7 @@ in {
 
     services.podman.containers = {
       ${name} = {
-        image = "ghcr.io/booklore-app/booklore:v1.10.0";
+        image = "ghcr.io/booklore-app/booklore:v1.12.0";
         volumes = [
           "${storage}/data:/data"
           "${storage}/books:/books"

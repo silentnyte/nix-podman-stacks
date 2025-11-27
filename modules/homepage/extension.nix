@@ -65,6 +65,7 @@ in {
 
       config = lib.mkIf (config.homepage.category != null) {
         homepage.settings = {
+          id = name;
           href = lib.mkIf (config.traefik.name != null) (lib.mkDefault config.traefik.serviceUrl);
           server = lib.mkDefault "local";
           container = lib.mkDefault name;

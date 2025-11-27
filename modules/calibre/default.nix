@@ -7,7 +7,7 @@
   storage = "${config.nps.storageBaseDir}/${name}";
   cfg = config.nps.stacks.${name};
 
-  category = "General";
+  category = "Media & Downloads";
   description = "Ebook Library";
   displayName = "Calibre-Web-Automated";
 

@@ -15,7 +15,6 @@
   radarrName = "radarr";
   bazarrName = "bazarr";
   prowlarrName = "prowlarr";
-  flaresolverrName = "flaresolverr";
 
   category = "Media & Downloads";
   qbittorrentDescription = "BitTorrent Client";
@@ -30,8 +29,6 @@
   bazarrDisplayName = "Bazarr";
   prolarrDescription = "Indexer Management";
   prowlarrDisplayName = "Prowlarr";
-  flaresolverrDescription = "Cloudflare Protection Bypass";
-  flaresolverrDisplayName = "Flaresolverr";
 
   gluetunCategory = "Network & Administration";
   gluetunDescription = "VPN client";
@@ -213,6 +210,12 @@ in {
     );
 
   config = lib.mkIf cfg.enable {
+    # If Flaresolverr is enabled, enable it & connect it to the streaming stack network
+    nps.stacks.flaresolverr.enable = lib.mkIf cfg.flaresolverr.enable true;
+    nps.containers.flaresolverr = lib.mkIf cfg.flaresolverr.enable {
+      network = [stackName];
+    };
+
     nps.stacks.lldap.bootstrap.groups = lib.mkIf (cfg.jellyfin.enable && cfg.jellyfin.oidc.enable) {
       ${cfg.jellyfin.oidc.adminGroup} = {};
       ${cfg.jellyfin.oidc.userGroup} = {};
@@ -237,7 +240,7 @@ in {
 
     services.podman.containers = {
       ${gluetunName} = lib.mkIf cfg.gluetun.enable {
-        image = "docker.io/qmcgaw/gluetun:v3.40.0";
+        image = "docker.io/qmcgaw/gluetun:v3.40.3";
         addCapabilities = ["NET_ADMIN"];
         devices = ["/dev/net/tun:/dev/net/tun"];
         volumes = [
@@ -287,7 +290,7 @@ in {
       };
 
       ${qbittorrentName} = lib.mkIf cfg.qbittorrent.enable {
-        image = "docker.io/linuxserver/qbittorrent:5.1.2";
+        image = "docker.io/linuxserver/qbittorrent:5.1.4";
         dependsOnContainer = [gluetunName];
         network = lib.mkIf cfg.gluetun.enable (lib.mkForce ["container:${gluetunName}"]);
         volumes = [
@@ -346,7 +349,7 @@ in {
         '';
       in
         lib.mkIf cfg.jellyfin.enable {
-          image = "lscr.io/linuxserver/jellyfin:10.11.2";
+          image = "lscr.io/linuxserver/jellyfin:10.11.3";
           volumes =
             [
               "${storage}/${jellyfinName}:/config"
@@ -427,7 +430,7 @@ in {
       };
 
       ${radarrName} = lib.mkIf cfg.radarr.enable {
-        image = "lscr.io/linuxserver/radarr:5.28.0";
+        image = "lscr.io/linuxserver/radarr:6.0.4";
         volumes = [
           "${storage}/${radarrName}:/config"
           "${mediaStorage}:/media"
@@ -487,7 +490,7 @@ in {
       };
 
       ${prowlarrName} = lib.mkIf cfg.prowlarr.enable {
-        image = "lscr.io/linuxserver/prowlarr:2.1.5";
+        image = "lscr.io/linuxserver/prowlarr:2.3.0";
         volumes = [
           "${storage}/${prowlarrName}:/config"
         ];
@@ -512,35 +515,6 @@ in {
           name = prowlarrDisplayName;
           id = prowlarrName;
           icon = "di:prowlarr";
-        };
-      };
-
-      ${flaresolverrName} = lib.mkIf cfg.flaresolverr.enable {
-        image = "ghcr.io/flaresolverr/flaresolverr:v3.4.5";
-        volumes = [
-          "${storage}/${prowlarrName}:/config"
-        ];
-        environment = {
-          LOG_LEVEL = "info";
-          LOG_HTML = false;
-          CAPTCHA_SOLVER = "none";
-        };
-
-        stack = stackName;
-        homepage = {
-          inherit category;
-          name = flaresolverrDisplayName;
-          settings = {
-            description = flaresolverrDescription;
-            icon = "flaresolverr";
-          };
-        };
-        glance = {
-          inherit category;
-          description = flaresolverrDescription;
-          name = flaresolverrDisplayName;
-          id = flaresolverrName;
-          icon = "di:flaresolverr";
         };
       };
     };

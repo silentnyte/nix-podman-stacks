@@ -46,7 +46,7 @@ in {
         Extra environment variables to set for the container.
         Variables can be either set directly or sourced from a file (e.g. for secrets).
 
-        See <https://github.com/crowdsecurity/crowdsec/blob/master/docker/README.md#environment-variables>
+        See <https://github.com/Tarow/dockdns?tab=readme-ov-file#configuration>
       '';
       example = {
         SOME_SECRET = {

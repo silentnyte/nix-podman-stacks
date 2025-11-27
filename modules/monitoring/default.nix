@@ -408,7 +408,7 @@ in {
 
     services.podman.containers = {
       ${grafanaName} = lib.mkIf cfg.grafana.enable {
-        image = "docker.io/grafana/grafana:12.2.1";
+        image = "docker.io/grafana/grafana:12.3.0";
         user = config.nps.defaultUid;
         volumes = [
           "${storage}/grafana/data:/var/lib/grafana"
@@ -471,7 +471,7 @@ in {
       };
 
       ${lokiName} = lib.mkIf cfg.loki.enable {
-        image = "docker.io/grafana/loki:3.5.8";
+        image = "docker.io/grafana/loki:3.6.2";
         exec = "-config.file=/etc/loki/local-config.yaml";
         user = config.nps.defaultUid;
         volumes = [

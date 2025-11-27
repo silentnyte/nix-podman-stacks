@@ -121,7 +121,7 @@ in {
       };
 
       davis = {
-        adminPasswordFile = dummySecret;
+        adminPasswordFile = dummySecretFile;
         enableLdapAuth = true;
         db = {
           type = "mysql";
@@ -169,6 +169,15 @@ in {
               policy = "one_factor";
             }
           ];
+        };
+      };
+
+      ephemera = {
+        enable = true;
+        downloadDirectory = "${config.nps.storageBaseDir}/booklore/bookdrop";
+        extraEnv = {
+          AA_API_KEY.fromFile = dummySecretFile;
+          AA_BASE_URL = "https://some-archive.org";
         };
       };
 
@@ -370,6 +379,16 @@ in {
         db = {
           userPasswordFile = dummySecretFile;
           rootPasswordFile = dummySecretFile;
+        };
+      };
+
+      kitchenowl = {
+        enable = true;
+        jwtSecretFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyHash;
         };
       };
 
@@ -629,6 +648,22 @@ in {
         // lib.genAttrs ["sonarr" "radarr" "bazarr" "prowlarr"] (name: {
           extraEnv."${lib.toUpper name}__AUTH__APIKEY".fromFile = dummySecretFile;
         });
+
+      tandoor = {
+        enable = true;
+        secretKeyFile = dummySecretFile;
+        db.passwordFile = dummySecretFile;
+        oidc = {
+          enable = true;
+          clientSecretFile = dummySecretFile;
+          clientSecretHash = dummyHash;
+        };
+        containers.tandoor.extraEnv = {
+          # https://docs.tandoor.dev/system/configuration/#default-permissions
+          SOCIAL_DEFAULT_ACCESS = 1;
+          SOCIAL_DEFAULT_GROUP = "user";
+        };
+      };
 
       timetracker = {
         enable = true;
